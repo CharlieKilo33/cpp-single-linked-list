@@ -61,6 +61,7 @@ class SingleLinkedList {
         }
 
         BasicIterator &operator++() noexcept {
+            assert(&node_ != nullptr);
             node_ = node_->next_node;
             return *this;
         }
@@ -72,10 +73,12 @@ class SingleLinkedList {
         }
 
         [[nodiscard]] reference operator*() const noexcept {
+            assert(&node_ != nullptr);
             return node_->value;
         }
 
         [[nodiscard]] pointer operator->() const noexcept {
+            assert(&node_ != nullptr);
             return &node_->value;
         }
 
@@ -219,6 +222,7 @@ public:
     }
 
     Iterator InsertAfter(ConstIterator pos, const Type& value) {
+        assert(&pos.node_ != nullptr);
         pos.node_->next_node = new Node(value, pos.node_->next_node);
         ++size_;
         return Iterator{ pos.node_->next_node };
@@ -229,6 +233,7 @@ public:
      * Возвращает итератор на элемент, следующий за удалённым
      */
     Iterator EraseAfter(ConstIterator pos) noexcept {
+        assert(&pos.node_ != nullptr);
         auto temp = pos.node_->next_node->next_node;
         delete pos.node_->next_node;
         pos.node_->next_node = temp;
@@ -237,6 +242,9 @@ public:
     }
 
     void PopFront() noexcept {
+        if(size_ == 0){
+            return;
+        }
         EraseAfter(Iterator{ &head_ });
     }
 };
